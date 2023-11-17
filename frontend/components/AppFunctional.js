@@ -103,6 +103,8 @@ export default function AppFunctional(props) {
     reset();
     if (!email) {
       setMessage(" Ouch: email must be a valid email");
+    } else if (email === "foo@bar.baz") {
+      setMessage("foo@bar.baz failure #71");
     } else {
       axios
         .post("http://localhost:9000/api/result", {
