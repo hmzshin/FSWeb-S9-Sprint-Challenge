@@ -23,7 +23,6 @@ export default function AppFunctional(props) {
   const [index, setIndex] = useState(4);
   const [isError, setIsError] = useState(true);
   const [errorMessages, setErrorMessages] = useState("");
-  const [isShown, setIsShown] = useState(false);
 
   // AŞAĞIDAKİ HELPERLAR SADECE ÖNERİDİR.
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
@@ -38,7 +37,7 @@ export default function AppFunctional(props) {
   function submitHandler(e) {
     e.preventDefault();
     console.log(email);
-    setIsShown(true);
+
     if (!isError) {
       if (email === "foo@bar.baz") {
         setMessage("foo@bar.baz failure #71");
@@ -53,7 +52,6 @@ export default function AppFunctional(props) {
           .then(function (response) {
             setMessage(response.data.message);
             setEmail("");
-            setIsShown(false);
           })
           .catch(function (error) {
             console.log(error);
@@ -65,11 +63,11 @@ export default function AppFunctional(props) {
   }
 
   useEffect(() => {
-    setMessage("");
     if (direction[0] == "right") {
       if (coordinate[1] <= 2) {
         setCoordinate([coordinate[0], coordinate[1] + 1]);
         setSteps(steps + 1);
+        setMessage("");
       } else {
         setMessage("Sağa gidemezsiniz");
       }
@@ -80,6 +78,7 @@ export default function AppFunctional(props) {
       if (coordinate[0] >= 2) {
         setCoordinate([coordinate[0] - 1, coordinate[1]]);
         setSteps(steps + 1);
+        setMessage("");
       } else {
         setMessage("Yukarıya gidemezsiniz");
       }
@@ -91,6 +90,7 @@ export default function AppFunctional(props) {
       if (coordinate[1] >= 2) {
         setCoordinate([coordinate[0], coordinate[1] - 1]);
         setSteps(steps + 1);
+        setMessage("");
       } else {
         setMessage("Sola gidemezsiniz");
       }
@@ -102,6 +102,7 @@ export default function AppFunctional(props) {
       if (coordinate[0] <= 2) {
         setCoordinate([coordinate[0] + 1, coordinate[1]]);
         setSteps(steps + 1);
+        setMessage("");
       } else {
         setMessage("Aşağıya gidemezsiniz");
       }
