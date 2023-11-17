@@ -19,12 +19,12 @@ export default function AppFunctional(props) {
   // AŞAĞIDAKİ HELPERLAR SADECE ÖNERİDİR.
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
 
-  function reset() {
+  const reset = () => {
     setMessage(initialMessage);
     setEmail(initialEmail);
     setSteps(initialSteps);
     setCoordinate(initiaCoordinate);
-  }
+  };
 
   useEffect(() => {
     if (direction[0] == "right") {
@@ -100,7 +100,6 @@ export default function AppFunctional(props) {
   function submitHandler(e) {
     e.preventDefault();
     console.log(email);
-    reset();
     if (!email) {
       setMessage(" Ouch: email must be a valid email");
     } else if (email === "foo@bar.baz") {
@@ -115,6 +114,7 @@ export default function AppFunctional(props) {
         })
         .then(function (response) {
           setMessage(response.data.message);
+          setEmail("");
         })
         .catch(function (error) {
           console.log(error);
