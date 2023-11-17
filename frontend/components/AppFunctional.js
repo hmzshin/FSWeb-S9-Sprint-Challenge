@@ -99,13 +99,14 @@ export default function AppFunctional(props) {
   function submitHandler(e) {
     e.preventDefault();
     console.log(email);
+    reset();
     if (!email) {
       setMessage(" Ouch: email must be a valid email");
     } else {
       axios
         .post("http://localhost:9000/api/result", {
-          x: coordinate[0],
-          y: coordinate[1],
+          x: coordinate[1],
+          y: coordinate[0],
           steps: steps,
           email: "lady@gaga.com",
         })
@@ -121,7 +122,7 @@ export default function AppFunctional(props) {
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">
-          Koordinatlar ({coordinate[0]}, {coordinate[1]})
+          Koordinatlar ({coordinate[1]}, {coordinate[0]})
         </h3>
         <h3 id="steps">{steps} kere ilerlediniz</h3>
       </div>
