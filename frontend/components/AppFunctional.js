@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 // önerilen başlangıç stateleri
@@ -10,7 +11,7 @@ export default function AppFunctional(props) {
   // define  states
   const [message, setMessage] = useState(initialMessage);
   const [email, setEmail] = useState(initialEmail);
-  const [steps, setSteps] = useState(initialSteps);
+  const [steps, setSteps] = useState(0);
   const [coordinate, setCoordinate] = useState(initiaCoordinate);
   const [direction, setDirection] = useState([]);
   const [index, setIndex] = useState(4);
@@ -29,6 +30,7 @@ export default function AppFunctional(props) {
     if (direction[0] == "right") {
       if (coordinate[1] <= 2) {
         setCoordinate([coordinate[0], coordinate[1] + 1]);
+        setSteps(steps + 1);
       } else {
         setMessage("Sağa gidemezsiniz");
       }
@@ -36,23 +38,34 @@ export default function AppFunctional(props) {
         setMessage("");
       }
     } else if (direction == "up") {
-      coordinate[0] >= 2
-        ? setCoordinate([coordinate[0] - 1, coordinate[1]])
-        : setMessage("Yukarıya gidemezsiniz");
+      if (coordinate[0] >= 2) {
+        setCoordinate([coordinate[0] - 1, coordinate[1]]);
+        setSteps(steps + 1);
+      } else {
+        setMessage("Yukarıya gidemezsiniz");
+      }
+
       if (coordinate[0] == 3) {
         setMessage("");
       }
     } else if (direction == "left") {
-      coordinate[1] >= 2
-        ? setCoordinate([coordinate[0], coordinate[1] - 1])
-        : setMessage("Sola gidemezsiniz");
+      if (coordinate[1] >= 2) {
+        setCoordinate([coordinate[0], coordinate[1] - 1]);
+        setSteps(steps + 1);
+      } else {
+        setMessage("Sola gidemezsiniz");
+      }
+
       if (coordinate[1] == 3) {
         setMessage("");
       }
     } else if (direction == "down") {
-      coordinate[0] <= 2
-        ? setCoordinate([coordinate[0] + 1, coordinate[1]])
-        : setMessage("Aşağıya gidemezsiniz");
+      if (coordinate[0] <= 2) {
+        setCoordinate([coordinate[0] + 1, coordinate[1]]);
+        setSteps(steps + 1);
+      } else {
+        setMessage("Aşağıya gidemezsiniz");
+      }
       if (coordinate[0] == 1) {
         setMessage("");
       }
@@ -63,7 +76,6 @@ export default function AppFunctional(props) {
 
   useEffect(() => {
     if (coordinate[0] == 1 && coordinate[1] == 1) {
-      console.log("arrangeIndex fonksiyonu çalıştı");
       setIndex(0);
     } else if (coordinate[0] == 1 && coordinate[1] == 2) {
       setIndex(1);
@@ -82,24 +94,36 @@ export default function AppFunctional(props) {
     } else if (coordinate[0] == 3 && coordinate[1] == 3) {
       setIndex(8);
     }
-
-    // Bu event handler, "B" için yeni bir dizin elde etmek üzere yukarıdaki yardımcıyı kullanabilir,
-    // ve buna göre state i değiştirir.
   }, [coordinate]);
 
   function submitHandler(e) {
     e.preventDefault();
     console.log(email);
-    // payloadu POST etmek için bir submit handlera da ihtiyacınız var.
+    if (!email) {
+      setMessage(" Ouch: email must be a valid email");
+    } else {
+      axios
+        .post("http://localhost:9000/api/result", {
+          x: coordinate[0],
+          y: coordinate[1],
+          steps: steps,
+          email: "lady@gaga.com",
+        })
+        .then(function (response) {
+          setMessage(response.data.message);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   }
-
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">
           Koordinatlar ({coordinate[0]}, {coordinate[1]})
         </h3>
-        <h3 id="steps">0 kere ilerlediniz</h3>
+        <h3 id="steps">{steps} kere ilerlediniz</h3>
       </div>
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
