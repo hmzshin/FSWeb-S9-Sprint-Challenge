@@ -70,8 +70,8 @@ export default function AppFunctional(props) {
         setMessage("");
       }
     }
+
     console.log("direction:", direction);
-    console.log("coordinate: ", coordinate);
   }, [direction]);
 
   useEffect(() => {
@@ -94,6 +94,7 @@ export default function AppFunctional(props) {
     } else if (coordinate[0] == 3 && coordinate[1] == 3) {
       setIndex(8);
     }
+    console.log("coordinate: ", coordinate);
   }, [coordinate]);
 
   function submitHandler(e) {
@@ -180,6 +181,7 @@ export default function AppFunctional(props) {
           id="email"
           type="email"
           placeholder="email girin"
+          value={email}
           onChange={(e) => {
             setEmail(e.target.value);
           }}
