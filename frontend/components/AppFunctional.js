@@ -1,11 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import * as Yup from "yup";
 
 // önerilen başlangıç stateleri
 const initialMessage = "";
 const initialEmail = "";
 const initialSteps = 0;
 const initiaCoordinate = [2, 2]; //  "B" nin bulunduğu indexi
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .required("Ouch: email is required")
+    .email("Ouch: email must be a valid email"),
+});
 
 export default function AppFunctional(props) {
   // define  states
@@ -15,6 +21,9 @@ export default function AppFunctional(props) {
   const [coordinate, setCoordinate] = useState(initiaCoordinate);
   const [direction, setDirection] = useState([]);
   const [index, setIndex] = useState(4);
+  const [isError, setIsError] = useState(true);
+  const [errorMessages, setErrorMessages] = useState("");
+  const [isShown, setIsShown] = useState(false);
 
   // AŞAĞIDAKİ HELPERLAR SADECE ÖNERİDİR.
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
@@ -26,7 +35,37 @@ export default function AppFunctional(props) {
     setCoordinate(initiaCoordinate);
   };
 
+  function submitHandler(e) {
+    e.preventDefault();
+    console.log(email);
+    setIsShown(true);
+    if (!isError) {
+      if (email === "foo@bar.baz") {
+        setMessage("foo@bar.baz failure #71");
+      } else {
+        axios
+          .post("http://localhost:9000/api/result", {
+            x: coordinate[1],
+            y: coordinate[0],
+            steps: steps,
+            email: email,
+          })
+          .then(function (response) {
+            setMessage(response.data.message);
+            setEmail("");
+            setIsShown(false);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    } else {
+      setMessage(errorMessages);
+    }
+  }
+
   useEffect(() => {
+    setMessage("");
     if (direction[0] == "right") {
       if (coordinate[1] <= 2) {
         setCoordinate([coordinate[0], coordinate[1] + 1]);
@@ -97,30 +136,21 @@ export default function AppFunctional(props) {
     console.log("coordinate: ", coordinate);
   }, [coordinate]);
 
-  function submitHandler(e) {
-    e.preventDefault();
-    console.log(email);
-    if (!email) {
-      setMessage(" Ouch: email must be a valid email");
-    } else if (email === "foo@bar.baz") {
-      setMessage("foo@bar.baz failure #71");
-    } else {
-      axios
-        .post("http://localhost:9000/api/result", {
-          x: coordinate[1],
-          y: coordinate[0],
-          steps: steps,
-          email: "lady@gaga.com",
-        })
-        .then(function (response) {
-          setMessage(response.data.message);
-          setEmail("");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
-  }
+  useEffect(() => {
+    validationSchema
+      .validate({ email })
+      .then((response) => {
+        setIsError(false);
+        console.log("hata yok ", response);
+      })
+      .catch((error) => {
+        console.log("error", error.message);
+        setIsError(true);
+        setErrorMessages(error.message);
+      });
+  }, [email]);
+
+  useEffect(() => {}, [message]);
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
