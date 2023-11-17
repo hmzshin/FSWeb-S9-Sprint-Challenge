@@ -18,53 +18,48 @@ export default function AppFunctional(props) {
   // AŞAĞIDAKİ HELPERLAR SADECE ÖNERİDİR.
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
 
-  function getXY(indexValue) {
-    // Koordinatları izlemek için bir state e sahip olmak gerekli değildirection.
-    // Bunları hesaplayabilmek için "B" nin hangi indexte olduğunu bilmek yeterlidir.
-  }
-
-  function showCoordinates(value) {
-    return `Koordinatlar (${value.x}, ${value.y})`;
-    // Kullanıcı için "Koordinatlar (2, 2)" mesajını izlemek için bir state'in olması gerekli değildir.
-    // Koordinatları almak için yukarıdaki "getXY" helperını ve ardından "getXYMesaj"ı kullanabilirsiniz.
-    // tamamen oluşturulmuş stringi döndürür.
-  }
-
   function reset() {
     setMessage(initialMessage);
     setEmail(initialEmail);
     setSteps(initialSteps);
     setCoordinate(initiaCoordinate);
-
-    // Tüm stateleri başlangıç ​​değerlerine sıfırlamak için bu helperı kullanın.
   }
 
   useEffect(() => {
     if (direction[0] == "right") {
-      coordinate[1] <= 2
-        ? setCoordinate([coordinate[0], coordinate[1] + 1])
-        : setCoordinate(coordinate);
+      if (coordinate[1] <= 2) {
+        setCoordinate([coordinate[0], coordinate[1] + 1]);
+      } else {
+        setMessage("Sağa gidemezsiniz");
+      }
+      if (coordinate[1] == 1) {
+        setMessage("");
+      }
     } else if (direction == "up") {
       coordinate[0] >= 2
         ? setCoordinate([coordinate[0] - 1, coordinate[1]])
-        : setCoordinate(coordinate);
+        : setMessage("Yukarıya gidemezsiniz");
+      if (coordinate[0] == 3) {
+        setMessage("");
+      }
     } else if (direction == "left") {
       coordinate[1] >= 2
         ? setCoordinate([coordinate[0], coordinate[1] - 1])
-        : setCoordinate(coordinate);
+        : setMessage("Sola gidemezsiniz");
+      if (coordinate[1] == 3) {
+        setMessage("");
+      }
     } else if (direction == "down") {
       coordinate[0] <= 2
         ? setCoordinate([coordinate[0] + 1, coordinate[1]])
-        : setCoordinate(coordinate);
+        : setMessage("Aşağıya gidemezsiniz");
+      if (coordinate[0] == 1) {
+        setMessage("");
+      }
     }
-
     console.log("direction:", direction);
     console.log("coordinate: ", coordinate);
   }, [direction]);
-
-  // Bu helper bir yön ("sol", "yukarı", vb.) alır ve "B" nin bir sonraki indeksinin ne olduğunu hesaplar.
-  // Gridin kenarına ulaşıldığında başka gidecek yer olmadığı için,
-  // şu anki indeksi değiştirmemeli.
 
   useEffect(() => {
     if (coordinate[0] == 1 && coordinate[1] == 1) {
@@ -82,7 +77,7 @@ export default function AppFunctional(props) {
       setIndex(5);
     } else if (coordinate[0] == 3 && coordinate[1] == 1) {
       setIndex(6);
-    } else if (coordinate[0] == 3 && coordinate[1] == 3) {
+    } else if (coordinate[0] == 3 && coordinate[1] == 2) {
       setIndex(7);
     } else if (coordinate[0] == 3 && coordinate[1] == 3) {
       setIndex(8);
@@ -114,7 +109,7 @@ export default function AppFunctional(props) {
         ))}
       </div>
       <div className="info">
-        <h3 id="message"></h3>
+        <h3 id="message">{message}</h3>
       </div>
       <div id="keypad">
         <button
