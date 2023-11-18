@@ -32,6 +32,7 @@ export default function AppFunctional(props) {
     setEmail(initialEmail);
     setSteps(initialSteps);
     setCoordinate(initiaCoordinate);
+    setDirection([]);
   };
 
   function submitHandler(e) {
@@ -59,6 +60,7 @@ export default function AppFunctional(props) {
       }
     } else {
       setMessage(errorMessages);
+      setEmail("");
     }
   }
 
