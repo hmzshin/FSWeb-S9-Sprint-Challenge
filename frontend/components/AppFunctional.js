@@ -39,29 +39,21 @@ export default function AppFunctional(props) {
     e.preventDefault();
     console.log(email);
 
-    if (!isError) {
-      if (email === "foo@bar.baz") {
-        setMessage("foo@bar.baz failure #71");
-      } else {
-        axios
-          .post("http://localhost:9000/api/result", {
-            x: coordinate[1],
-            y: coordinate[0],
-            steps: steps,
-            email: email,
-          })
-          .then(function (response) {
-            setMessage(response.data.message);
-            setEmail("");
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
-    } else {
-      setMessage(errorMessages);
-      setEmail("");
-    }
+    axios
+      .post("http://localhost:9000/api/result", {
+        x: coordinate[1],
+        y: coordinate[0],
+        steps: steps,
+        email: email,
+      })
+      .then(function (response) {
+        setMessage(response.data.message);
+        setEmail("");
+      })
+      .catch(function (error) {
+        console.log(error.response.data.message);
+        setMessage(error.response.data.message);
+      });
   }
 
   useEffect(() => {

@@ -3,7 +3,6 @@ import React from "react";
 import AppFunctional from "./frontend/components/AppFunctional";
 import { render, fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { act } from "@testing-library/react";
 
 jest.setTimeout(1000); // default 5000 too long for Codegrade
 const waitForOptions = { timeout: 100 };
@@ -381,9 +380,7 @@ test("AppFunctional bir fonksiyonel bileşendir.", () => {
         fireEvent.click(up);
         fireEvent.change(email, { target: { value: "lady@gaga.com" } });
         fireEvent.click(submit);
-        await act(async () => {
-          screen.findByText("lady win #31", queryOptions, waitForOptions);
-        });
+        await screen.findByText("lady win #31", queryOptions, waitForOptions);
       });
       test(`[F2 ${label}] Aksiyonlar: aşağı, aşağı, email gir, submit
           Başarılı mesajı doğru`, async () => {
@@ -391,9 +388,7 @@ test("AppFunctional bir fonksiyonel bileşendir.", () => {
         fireEvent.click(down);
         fireEvent.change(email, { target: { value: "lady@gaga.com" } });
         fireEvent.click(submit);
-        await act(async () => {
-          screen.findByText("lady win #43", queryOptions, waitForOptions);
-        });
+        await screen.findByText("lady win #43", queryOptions, waitForOptions);
       });
       test(`[F3 ${label}] Aksiyonlar: yukarı, aşağı, sol, sağ, email gir, submit
           Başarılı mesajı doğru`, async () => {
@@ -403,22 +398,18 @@ test("AppFunctional bir fonksiyonel bileşendir.", () => {
         fireEvent.click(right);
         fireEvent.change(email, { target: { value: "lady@gaga.com" } });
         fireEvent.click(submit);
-        await act(async () => {
-          screen.findByText("lady win #73", queryOptions, waitForOptions);
-        });
+        await screen.findByText("lady win #73", queryOptions, waitForOptions);
       });
       test(`[F4 ${label}] Aksiyonlar: aşağı, sağ, submit
           Mail girilmediğinde hata mesajı doğru`, async () => {
         fireEvent.click(down);
         fireEvent.click(right);
         fireEvent.click(submit);
-        await act(async () => {
-          screen.findByText(
-            "Ouch: email is required",
-            queryOptions,
-            waitForOptions
-          );
-        });
+        await screen.findByText(
+          "Ouch: email is required",
+          queryOptions,
+          waitForOptions
+        );
       });
       test(`[F5 ${label}] Aksiyonlar: aşağı, sağ, type invalid email, submit
           geçersiz Mail girildiğinde hata mesajı doğru`, async () => {
@@ -426,13 +417,11 @@ test("AppFunctional bir fonksiyonel bileşendir.", () => {
         fireEvent.click(right);
         fireEvent.change(email, { target: { value: "bad@email" } });
         fireEvent.click(submit);
-        await act(async () => {
-          screen.findByText(
-            "Ouch: email must be a valid email",
-            queryOptions,
-            waitForOptions
-          );
-        });
+        await screen.findByText(
+          "Ouch: email must be a valid email",
+          queryOptions,
+          waitForOptions
+        );
       });
       test(`[F6 ${label}] Aksiyonlar: down, right, type foo@bar.baz email, submit
           Banlı email hata mesajı doğru`, async () => {
@@ -440,23 +429,19 @@ test("AppFunctional bir fonksiyonel bileşendir.", () => {
         fireEvent.click(right);
         fireEvent.change(email, { target: { value: "foo@bar.baz" } });
         fireEvent.click(submit);
-        await act(async () => {
-          screen.findByText(
-            "foo@bar.baz failure #71",
-            queryOptions,
-            waitForOptions
-          );
-        });
+        await screen.findByText(
+          "foo@bar.baz failure #71",
+          queryOptions,
+          waitForOptions
+        );
       });
       test(`[F7 ${label}] Aksiyonlar: left, type valid email, submit
           Gönderildiğinde email inputu resetleniyor`, async () => {
         fireEvent.click(left);
         fireEvent.change(email, { target: { value: "lady@gaga.com" } });
         fireEvent.click(submit);
-        await act(async () => {
-          screen.findByText("lady win #29", queryOptions, waitForOptions);
-          expect(email.value).toBeFalsy();
-        });
+        await screen.findByText("lady win #29", queryOptions, waitForOptions);
+        expect(email.value).toBeFalsy();
       });
       test(`[F8 ${label}] Aksiyonlar: up, right, type valid email, submit
           Gönderme adımları ve koordinatları sıfırlamıyor`, async () => {
@@ -464,11 +449,9 @@ test("AppFunctional bir fonksiyonel bileşendir.", () => {
         fireEvent.click(right);
         fireEvent.change(email, { target: { value: "lady@gaga.com" } });
         fireEvent.click(submit);
-        await act(async () => {
-          screen.findByText("lady win #49", queryOptions, waitForOptions);
-          expect(coordinates.textContent).toMatch(/\(3.*1\)$/);
-          expect(steps.textContent).toBe("2 kere ilerlediniz");
-        });
+        await screen.findByText("lady win #49", queryOptions, waitForOptions);
+        expect(coordinates.textContent).toMatch(/\(3.*1\)$/);
+        expect(steps.textContent).toBe("2 kere ilerlediniz");
       });
     });
   });
